@@ -5,18 +5,18 @@ public class PlayerMovement : MonoBehaviour
 {
     // PUBLIC
     public float movementSpeed, jumpStrength;
+    public bool isGrounded;
     public Vector2 maxVelocity;
 
     // PRIVATE
     private Rigidbody2D rb;
     private Animator anim;
     private Vector2 movementInput;
-    private bool isGrounded;
     private float numJumps = 2;
 
     void Awake()
     {
-        // Get components
+        // Get components;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
@@ -33,7 +33,8 @@ public class PlayerMovement : MonoBehaviour
         SetAnimation();
         
         // Move player
-        rb.AddForceX(movementInput.x * movementSpeed);
+        if (PlayerLogic.instance.isAlive)
+            rb.AddForceX(movementInput.x * movementSpeed);
         
         // Limit velocity
         rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxVelocity.x, maxVelocity.x), Mathf.Clamp(rb.linearVelocityY, -maxVelocity.y, maxVelocity.y));
