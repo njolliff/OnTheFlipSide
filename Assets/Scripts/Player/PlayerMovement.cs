@@ -25,9 +25,9 @@ public class PlayerMovement : MonoBehaviour
     {
         // Flip player sprite
         if (rb.linearVelocityX > 0)
-            transform.localScale = new Vector3(-1, 1, 1);
-        else if (rb.linearVelocityX < 0)
             transform.localScale = new Vector3(1, 1, 1);
+        else if (rb.linearVelocityX < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
 
         // Play animations
         SetAnimation();
@@ -42,7 +42,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void SetAnimation()
     {
-        anim.SetBool("Walking", isGrounded && rb.linearVelocityX != 0); // Walking if moving and grounded
+        anim.SetBool("IsMoving", rb.linearVelocityX != 0); // Moving
+        anim.SetBool("IsGrounded", isGrounded); // Grounded
     }
 
     // Input functions
@@ -53,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump()
     {
-        if (numJumps > 0)
+        if (numJumps > 0 && PlayerLogic.instance.isAlive)
         {
             if (isGrounded)
                 numJumps--; // Decrement jump count

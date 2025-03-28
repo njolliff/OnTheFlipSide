@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 516764678997433498}
   - component: {fileID: 1707318889590662119}
   - component: {fileID: 2628915648590620739}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Checkpoint Flag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,8 +125,8 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.25}
+    oldSize: {x: 2, y: 2}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
