@@ -14,37 +14,40 @@ public class ButtonScript : MonoBehaviour
 
     // PRIVATE
     private GameObject map, currentBox;
-    private Vector3 _originalPos;
-    private bool _isPressed, _canActivate = true, _isFlipped = false;
-    [SerializeField] private float _maxDownDistance = 0.1f;
+    private Vector3 originalPos;
+    private bool isPressed, wasPressed = false, canActivate = true, isFlipped = false;
+    [SerializeField] private float maxDownDistance;
 
     void Start()
     {
-        _originalPos = transform.localPosition;
+        originalPos = transform.localPosition;
         map = GameObject.Find("Map");
     }
 
-
     void FixedUpdate()
     {
-        float direction = _isFlipped ? 1f : -1f; // Reverse movement when flipped
-        float targetPosition = _isFlipped ? _originalPos.y + _maxDownDistance : _originalPos.y - _maxDownDistance; // Adjust target based on flip
+        float direction = isFlipped ? 1f : -1f; // Reverse movement when flipped
+        float targetPosition = isFlipped ? originalPos.y + maxDownDistance : originalPos.y - maxDownDistance; // Adjust target based on flip
 
-        if (_isPressed && transform.localPosition.y > targetPosition)
+        if (isPressed && transform.localPosition.y > targetPosition)
         {
-            transform.Translate(0f, direction * 0.01f, 0f, Space.Self);
+            transform.Translate(0f, direction * (pressSpeed / 100), 0f, Space.Self);
         }
-        else if (!_isPressed && transform.localPosition.y < _originalPos.y)
+        else if (!isPressed && transform.localPosition.y < originalPos.y)
         {
-            transform.Translate(0f, -direction * 0.01f, 0f, Space.Self);
+            transform.Translate(0f, -direction * (pressSpeed / 100), 0f, Space.Self);
+        }
+        else if (!isPressed && wasPressed && transform.localPosition.y == originalPos.y)
+        {
+            wasPressed = false;
+            StartCoroutine(ActivateEffect());
+            isFlipped = !isFlipped;
         }
     }
 
-
-
     private IEnumerator ActivateEffect()
     {
-        _canActivate = false;
+        canActivate = false;
 
         switch (activatorEffect)
         {
@@ -52,16 +55,16 @@ public class ButtonScript : MonoBehaviour
                 EventManager.instance.WorldReflection(reflectXAxis, reflectYAxis, map);
                 if (reflectXAxis)
                 {
-                    _isFlipped = !_isFlipped;
-                    _originalPos.y = -_originalPos.y;
+                    isFlipped = !isFlipped;
+                    originalPos.y = -originalPos.y;
                 }
                 break;
             case ActivatorEffect.MapReflection:
                 EventManager.instance.MapReflection(reflectXAxis, reflectYAxis, map);
                 if (reflectXAxis)
                 {
-                    _isFlipped = !_isFlipped;
-                    _originalPos.y = -_originalPos.y;
+                    isFlipped = !isFlipped;
+                    originalPos.y = -originalPos.y;
                 }
                 break;
             case ActivatorEffect.BoxSpawner:
@@ -72,19 +75,20 @@ public class ButtonScript : MonoBehaviour
         }
 
         yield return new WaitForSeconds(2f);
-        _canActivate = true;
+        canActivate = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            _isPressed = true;
+            isPressed = true;
         }
-        else if (other.CompareTag("Actuation Zone") && _canActivate)
+        else if (other.CompareTag("Actuation Zone") && canActivate)
         {
             StartCoroutine(ActivateEffect());
-            _isFlipped = !_isFlipped;
+            wasPressed = true;
+            isFlipped = !isFlipped;
         }
     }
 
@@ -92,7 +96,7 @@ public class ButtonScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            _isPressed = false;
+            isPressed = false;
         }
     }
 }
