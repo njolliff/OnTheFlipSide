@@ -13,6 +13,7 @@ public class PlayerLogic : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
     private PlayerInput playerInput;
+    private float gravityScale;
 
     // Initialize as singleton instance in DontDestroyOnLoad
     public static PlayerLogic instance;
@@ -29,6 +30,7 @@ public class PlayerLogic : MonoBehaviour
         // Get components
         playerMovement = GetComponent<PlayerMovement>();
         rb = GetComponent<Rigidbody2D>();
+        gravityScale = rb.gravityScale;
         sprite = GetComponent<SpriteRenderer>();
         playerInput = GetComponent<PlayerInput>();
 
@@ -78,14 +80,12 @@ public class PlayerLogic : MonoBehaviour
         // Set alive to false
         isAlive = false;
 
-        // Change color to indicate death
-        sprite.color = new Color(1, 0, 0, 1); // Red color
-
         // Reset velocity to 0 and disable gravity
         rb.linearVelocity = Vector2.zero;
         rb.gravityScale = 0;
 
         // TODO: Play death animation
+        sprite.color = new Color(1, 0, 0, 1); // Red color
 
         // Respawn player after a 1s delay
         Invoke(nameof(Respawn), 1f);
@@ -100,7 +100,7 @@ public class PlayerLogic : MonoBehaviour
         transform.position = spawnPoint.position;
 
         // Enable gravity
-        rb.gravityScale = 1;
+        rb.gravityScale = gravityScale;
 
         // TODO: Play spawn animation
 
