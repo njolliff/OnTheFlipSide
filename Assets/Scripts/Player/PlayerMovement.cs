@@ -42,8 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void SetAnimation()
     {
-        anim.SetBool("IsMoving", rb.linearVelocityX != 0); // Moving
-        anim.SetBool("IsGrounded", isGrounded); // Grounded
+        anim.SetBool("IsMoving", rb.linearVelocityX >= 0.1 || rb.linearVelocityX <= -0.1); // Moving
     }
 
     // Input functions

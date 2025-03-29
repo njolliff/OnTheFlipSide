@@ -23,6 +23,11 @@ public class SceneManager : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         // Load the specified scene by name
+        if (sceneName != null)
+        {
+            Debug.LogError("Scene name not provided.");
+            return;
+        }
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
     }
 }

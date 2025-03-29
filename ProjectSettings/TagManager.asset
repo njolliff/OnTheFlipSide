@@ -5,16 +5,18 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ground
+  - Box
+  - Actuation Zone
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Activator
+  - Environment
+  - Box
   - 
   - 
   - 
