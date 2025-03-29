@@ -27,13 +27,16 @@ public class EventManager : MonoBehaviour
     public void WorldReflection(bool reflectXAxis, bool reflectYAxis, GameObject map)
     {
         if (reflectXAxis) // X-Axis Reflection
+        {
             map.transform.localScale = new Vector3(map.transform.localScale.x, -map.transform.localScale.y, map.transform.localScale.z); // Reflect the world vertically
             PlayerLogic.instance.transform.position = new Vector2(PlayerLogic.instance.transform.position.x, -PlayerLogic.instance.transform.position.y); // Reflect the player's position
+        }
         if (reflectYAxis) // Y-Axis Reflection
+        {
             map.transform.localScale = new Vector3(-map.transform.localScale.x, map.transform.localScale.y, map.transform.localScale.z); // Reflect the world horizontally
             PlayerLogic.instance.transform.position = new Vector2(-PlayerLogic.instance.transform.position.x, PlayerLogic.instance.transform.position.y); // Reflect the player's position
-
-        if (onWorldReflection != null)
+        }
+        if (onWorldReflection != null && (reflectXAxis || reflectYAxis))
             onWorldReflection();
     }
 
@@ -46,7 +49,7 @@ public class EventManager : MonoBehaviour
         if (reflectYAxis) // Y-Axis Reflection
             map.transform.localScale = new Vector3(-map.transform.localScale.x, map.transform.localScale.y, map.transform.localScale.z); // Reflect the world horizontally
 
-        if (onMapReflection != null)
+        if (onMapReflection != null && (reflectXAxis || reflectYAxis))
             onMapReflection();
     }
 }

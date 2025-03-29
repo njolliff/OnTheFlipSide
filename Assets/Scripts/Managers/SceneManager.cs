@@ -20,10 +20,10 @@ public class SceneManager : MonoBehaviour
             instance = null;
     }
 
+    // Load the specified scene by name
     public void LoadScene(string sceneName)
     {
-        // Load the specified scene by name
-        if (sceneName != null)
+        if (sceneName == null)
         {
             Debug.LogError("Scene name not provided.");
             return;
