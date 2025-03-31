@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
         SetAnimation();
         
         // Move player
-        if (PlayerLogic.instance.isAlive)
+        if (PlayerLogic.instance != null && PlayerLogic.instance.isAlive)
             rb.AddForceX(movementInput.x * movementSpeed);
         
         // Limit velocity

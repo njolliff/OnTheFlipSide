@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public bool retainProgress = true;
+
     public static LevelManager instance;
     void Start()
     {
@@ -28,7 +30,24 @@ public class LevelManager : MonoBehaviour
     void OnDestroy()
     {
         if (instance == this)
-            instance = null;
+            {
+                instance = null;
+
+                // Reset PlayerPrefs if retainProgress is set to false
+                if (!retainProgress)
+                {
+                    for (int i = 1; i < 11; i++)
+                    {
+                        if (PlayerPrefs.HasKey(i.ToString()))
+                        {
+                            if (i != 1)
+                                PlayerPrefs.SetInt(i.ToString(), -1); // Set all levels other than 1 to -1 (locked)
+                            else
+                                PlayerPrefs.SetInt(i.ToString(), 0); // Set Level 1 to 0 (unlocked)
+                        }
+                    }
+                }
+            }
     }
 
     public void UnlockLevel(int level)

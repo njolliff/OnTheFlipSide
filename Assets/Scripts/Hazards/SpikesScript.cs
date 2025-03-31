@@ -7,7 +7,7 @@ public class SpikesScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             // Kill player on contact
-            PlayerLogic.instance.Die(); 
+            EventManager.instance.KillPlayer(); 
         }
     }
 }

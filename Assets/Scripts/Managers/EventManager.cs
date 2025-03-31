@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
+    private int currentSpawner = 0;
+
     // Initialize as singleton
     public static EventManager instance;
     void Awake()
@@ -20,6 +22,31 @@ public class EventManager : MonoBehaviour
     {
         if (instance == this)
             instance = null;
+    }
+
+    // Player Spawn Point
+    public void SetSpawner(int spawnerID)
+    {
+        currentSpawner = spawnerID;
+    }
+
+    // Player Spawning
+    public event Action<int> onSpawnPlayer;
+    public void SpawnPlayer()
+    {
+        if (onSpawnPlayer != null)
+            onSpawnPlayer(currentSpawner);
+    }
+
+    // Player Death
+    public event Action onKillPlayer;
+    public void KillPlayer()
+    {
+        if (onKillPlayer != null)
+        {
+            onKillPlayer();
+            Invoke(nameof(SpawnPlayer), 1f);
+        }
     }
 
     // World Reflection

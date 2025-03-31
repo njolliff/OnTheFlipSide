@@ -9,7 +9,7 @@ public class LevelUIInitializer : MonoBehaviour
     private string level;
     private int levelValue;
     
-    void Start()
+    void Awake()
     {
         levelValue = -1;
         
@@ -18,10 +18,11 @@ public class LevelUIInitializer : MonoBehaviour
         {
             level = levelValue.ToString();
         }
-
-        Debug.Log("Extracted Level: " + level);
         
+        // Apply appropriate sprite
         ApplySprite();
+
+        button.onClick.AddListener(() => SceneManager.instance.LoadScene("Level " + level));
     }
 
     void ApplySprite()
@@ -45,8 +46,6 @@ public class LevelUIInitializer : MonoBehaviour
                 filePath += "_completed";
                 button.interactable = true;
             }
-
-            Debug.Log("Loading Sprite from: " + filePath);
 
             Sprite loadedSprite = Resources.Load<Sprite>(filePath);
             if (loadedSprite != null)
