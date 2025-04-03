@@ -58,8 +58,6 @@ public class EventManager : MonoBehaviour
     {
         if (reflectXAxis) // X-Axis Reflection
         {
-            Debug.Log("Reflecting WORLD on X-Axis");
-
             // Reflect the map vertically
             Vector3 map_scale = map.transform.localScale;
             map_scale.y *= -1;
@@ -74,8 +72,6 @@ public class EventManager : MonoBehaviour
         }
         if (reflectYAxis) // Y-Axis Reflection
         {
-            Debug.Log("Reflecting WORLD on Y-Axis");
-
             // Reflect the map horizontally
             Vector3 map_scale = map.transform.localScale;
             map_scale.x *= -1;
@@ -95,8 +91,6 @@ public class EventManager : MonoBehaviour
     {
         if (reflectXAxis) // X-Axis Reflection
         {
-            Debug.Log("Reflecting MAP on X-Axis");
-
             // Reflect the map vertically
             Vector3 map_scale = map.transform.localScale;
             map_scale.y *= -1;
@@ -108,8 +102,6 @@ public class EventManager : MonoBehaviour
         }
         if (reflectYAxis) // Y-Axis Reflection
         {
-            Debug.Log("Reflecting MAP on Y-Axis");
-
             // Reflect the map horizontally
             Vector3 map_scale = map.transform.localScale;
             map_scale.x *= -1;

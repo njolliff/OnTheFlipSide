@@ -53,7 +53,8 @@ public class LevelManager : MonoBehaviour
     public void UnlockLevel(int level)
     {
         if (PlayerPrefs.HasKey(level.ToString()))
-            PlayerPrefs.SetInt(level.ToString(), 0);
+            if (PlayerPrefs.GetInt(level.ToString()) == -1) // Only unlock if it's locked
+                PlayerPrefs.SetInt(level.ToString(), 0);
     }
 
     public void CompleteLevel(int level)
