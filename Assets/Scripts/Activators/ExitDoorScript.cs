@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExitDoorScript : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class ExitDoorScript : MonoBehaviour
                 EventManager.instance.SetSpawner(0);
 
                 // Load the next scene
-                SceneManager.instance.LoadScene("Level Select");
+                SceneManager.LoadScene("Level Select");
             }
         }
     }

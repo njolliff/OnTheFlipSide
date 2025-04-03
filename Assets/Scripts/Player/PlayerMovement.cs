@@ -1,5 +1,7 @@
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -66,6 +68,11 @@ public class PlayerMovement : MonoBehaviour
             // Apply jump force as impulse
             rb.AddForceY(jumpStrength, ForceMode2D.Impulse);
         }
+    }
+
+    public void OnResetLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload the current scene
     }
 
     // Ground check

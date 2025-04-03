@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelUIInitializer : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class LevelUIInitializer : MonoBehaviour
         // Apply appropriate sprite
         ApplySprite();
 
-        button.onClick.AddListener(() => SceneManager.instance.LoadScene("Level " + level));
+        button.onClick.AddListener(() => SceneManager.LoadScene("Level " + level));
     }
 
     void ApplySprite()
