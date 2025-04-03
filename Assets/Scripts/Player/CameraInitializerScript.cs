@@ -18,7 +18,10 @@ public class CameraInitializerScript : MonoBehaviour
         cameraBounds = GameObject.Find("Camera Bounds").GetComponent<PolygonCollider2D>();
 
         // Update confiner bounds
-        cameraConfiner.BoundingShape2D = cameraBounds;
-        cameraConfiner.InvalidateBoundingShapeCache();
+        if (cameraConfiner != null && cameraBounds != null)
+        {
+            cameraConfiner.BoundingShape2D = cameraBounds;
+            cameraConfiner.InvalidateBoundingShapeCache();
+        }
     }
 }

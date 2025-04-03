@@ -62,7 +62,7 @@ public class PlayerLogic : MonoBehaviour
         sprite.color = new Color(1, 0, 0, 1); // Red color
 
         // Destroy player
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(0.85f);
         Destroy(gameObject);
     }
 

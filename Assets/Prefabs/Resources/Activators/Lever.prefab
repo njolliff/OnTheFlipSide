@@ -205,3 +205,6 @@ MonoBehaviour:
   activatorEffect: 1
   reflectXAxis: 0
   reflectYAxis: 0
+  map: {fileID: 0}
+  hinge: {fileID: 87085354976092595}
+  rb: {fileID: 2943527588913113036}
