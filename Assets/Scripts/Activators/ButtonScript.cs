@@ -8,40 +8,92 @@ public class ButtonScript : MonoBehaviour
 
     // PUBLIC
     public float pressSpeed;
-    public bool reflectXAxis, reflectYAxis;
+    public bool isFlipped = false, reflectXAxis, reflectYAxis;
     public GameObject box;
     public Transform boxSpawnPoint;
 
     // PRIVATE
-    private GameObject map, currentBox;
-    private Vector3 originalPos;
-    private bool isPressed, wasPressed = false, canActivate = true, isFlipped = false;
     [SerializeField] private float maxDownDistance;
+    [SerializeField] private Rigidbody2D rb;
+    private GameObject map, currentBox;
+    private Vector3 originalPos, actuationPos;
+    private bool wasPressed = false, canActivate = true, isPressed = false;
+    private float direction;
 
     void Start()
     {
+        // Store original position
         originalPos = transform.localPosition;
+
+        // Set actuation position based on original position and max down distance
+        actuationPos = originalPos;
+        actuationPos.y = isFlipped ? actuationPos.y += maxDownDistance : actuationPos.y -= maxDownDistance;
+
+        // Set direction
+        direction = isFlipped ? 1f : -1f;
+
+        // Get map
         map = GameObject.Find("Map");
+
+        // Subscribe to events
+        if (EventManager.instance != null)
+        {
+            EventManager.instance.onXReflection += FlipY; // Subscribe to x-axis reflection event
+        }
+    }
+
+    void OnDisable()
+    {
+        // Unsubscribe to events
+        if (EventManager.instance != null)
+        {
+            EventManager.instance.onXReflection -= FlipY; // Subscribe to x-axis reflection event
+        }
     }
 
     void FixedUpdate()
     {
-        float direction = isFlipped ? 1f : -1f; // Reverse movement when flipped
-        float targetPosition = isFlipped ? originalPos.y + maxDownDistance : originalPos.y - maxDownDistance; // Adjust target based on flip
+        if (isPressed)
+        {
+            // Move down if button is pressed and not at maximum down distance
+            if (transform.localPosition.y > actuationPos.y)
+            {
+                rb.linearVelocityY = direction * pressSpeed;
+            }
+            // Activate effect if button is pressed and has reached or gone below the actuation position
+            else if (transform.localPosition.y <= actuationPos.y)
+            {
+                rb.linearVelocityY = 0; // Stop any residual movement
+                transform.localPosition = new Vector2(transform.localPosition.x, actuationPos.y); // Ensure it doesn't go below the actuation position
 
-        if (isPressed && transform.localPosition.y > targetPosition)
-        {
-            transform.Translate(0f, direction * (pressSpeed / 100), 0f, Space.Self);
+                if (canActivate && !wasPressed)
+                {
+                    wasPressed = true;
+                    StartCoroutine(ActivateEffect());
+                }
+            }
         }
-        else if (!isPressed && transform.localPosition.y < originalPos.y)
+
+        else
         {
-            transform.Translate(0f, -direction * (pressSpeed / 100), 0f, Space.Self);
-        }
-        else if (!isPressed && wasPressed && transform.localPosition.y == originalPos.y)
-        {
-            wasPressed = false;
-            StartCoroutine(ActivateEffect());
-            isFlipped = !isFlipped;
+            // Move up if button is not pressed and not at original position
+            if (transform.localPosition.y < originalPos.y)
+            {
+                rb.linearVelocityY = -direction * pressSpeed;
+            }
+
+            else if (transform.localPosition.y >= originalPos.y)
+            {
+                rb.linearVelocityY = 0; // Stop any residual movement
+                transform.localPosition = new Vector2(transform.localPosition.x, originalPos.y); // Ensure it doesn't go above the original position
+            }
+
+            // If button was pressed and has raised above the actuation position, activate effect again to reverse reflection
+            if (Mathf.Abs(actuationPos.y - transform.localPosition.y) > 0.1f && wasPressed && canActivate)
+            {
+                wasPressed = false;
+                StartCoroutine(ActivateEffect());
+            }
         }
     }
 
@@ -53,19 +105,9 @@ public class ButtonScript : MonoBehaviour
         {
             case ActivatorEffect.WorldReflection:
                 EventManager.instance.WorldReflection(reflectXAxis, reflectYAxis, map);
-                if (reflectXAxis)
-                {
-                    isFlipped = !isFlipped;
-                    originalPos.y = -originalPos.y;
-                }
                 break;
             case ActivatorEffect.MapReflection:
                 EventManager.instance.MapReflection(reflectXAxis, reflectYAxis, map);
-                if (reflectXAxis)
-                {
-                    isFlipped = !isFlipped;
-                    originalPos.y = -originalPos.y;
-                }
                 break;
             case ActivatorEffect.BoxSpawner:
                 if (currentBox != null)
@@ -74,27 +116,36 @@ public class ButtonScript : MonoBehaviour
                 break;
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         canActivate = true;
+    }
+
+    private void FlipY()
+    {
+        isFlipped = !isFlipped;
+        direction = -direction;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") || other.CompareTag("Box"))
         {
             isPressed = true;
         }
-        else if (other.CompareTag("Actuation Zone") && canActivate)
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        // Keep the button pressed if the player is still in contact
+        if (other.CompareTag("Player") || other.CompareTag("Box"))
         {
-            StartCoroutine(ActivateEffect());
-            wasPressed = true;
-            isFlipped = !isFlipped;
+            other.attachedRigidbody.linearVelocityY = rb.linearVelocityY;
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") || other.CompareTag("Box"))
         {
             isPressed = false;
         }

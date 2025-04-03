@@ -49,34 +49,75 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    // Events for reflections
+    public event Action onXReflection;
+    public event Action onYReflection;
+
     // World Reflection
-    public event Action onWorldReflection;
     public void WorldReflection(bool reflectXAxis, bool reflectYAxis, GameObject map)
     {
         if (reflectXAxis) // X-Axis Reflection
         {
-            map.transform.localScale = new Vector3(map.transform.localScale.x, -map.transform.localScale.y, map.transform.localScale.z); // Reflect the world vertically
-            PlayerLogic.instance.transform.position = new Vector2(PlayerLogic.instance.transform.position.x, -PlayerLogic.instance.transform.position.y); // Reflect the player's position
+            Debug.Log("Reflecting WORLD on X-Axis");
+
+            // Reflect the map vertically
+            Vector3 map_scale = map.transform.localScale;
+            map_scale.y *= -1;
+            map.transform.localScale = map_scale; 
+
+            // Reflect the player's position
+            PlayerLogic.instance.transform.position = new Vector2(PlayerLogic.instance.transform.position.x, -PlayerLogic.instance.transform.position.y); 
+
+            // Call the reflection event
+            if (onXReflection != null)
+                onXReflection();
         }
         if (reflectYAxis) // Y-Axis Reflection
         {
-            map.transform.localScale = new Vector3(-map.transform.localScale.x, map.transform.localScale.y, map.transform.localScale.z); // Reflect the world horizontally
-            PlayerLogic.instance.transform.position = new Vector2(-PlayerLogic.instance.transform.position.x, PlayerLogic.instance.transform.position.y); // Reflect the player's position
+            Debug.Log("Reflecting WORLD on Y-Axis");
+
+            // Reflect the map horizontally
+            Vector3 map_scale = map.transform.localScale;
+            map_scale.x *= -1;
+            map.transform.localScale = map_scale; 
+
+            // Reflect the player's position
+            PlayerLogic.instance.transform.position = new Vector2(-PlayerLogic.instance.transform.position.x, PlayerLogic.instance.transform.position.y);
+
+            // Call the reflection event
+            if (onYReflection != null)
+                onYReflection();
         }
-        if (onWorldReflection != null && (reflectXAxis || reflectYAxis))
-            onWorldReflection();
     }
 
     // Map Reflection
-    public event Action onMapReflection;
     public void MapReflection(bool reflectXAxis, bool reflectYAxis, GameObject map)
     {
         if (reflectXAxis) // X-Axis Reflection
-            map.transform.localScale = new Vector3(map.transform.localScale.x, -map.transform.localScale.y, map.transform.localScale.z); // Reflect the world vertically
-        if (reflectYAxis) // Y-Axis Reflection
-            map.transform.localScale = new Vector3(-map.transform.localScale.x, map.transform.localScale.y, map.transform.localScale.z); // Reflect the world horizontally
+        {
+            Debug.Log("Reflecting MAP on X-Axis");
 
-        if (onMapReflection != null && (reflectXAxis || reflectYAxis))
-            onMapReflection();
+            // Reflect the map vertically
+            Vector3 map_scale = map.transform.localScale;
+            map_scale.y *= -1;
+            map.transform.localScale = map_scale; 
+
+            // Call the reflection event
+            if (onXReflection != null)
+                onXReflection();
+        }
+        if (reflectYAxis) // Y-Axis Reflection
+        {
+            Debug.Log("Reflecting MAP on Y-Axis");
+
+            // Reflect the map horizontally
+            Vector3 map_scale = map.transform.localScale;
+            map_scale.x *= -1;
+            map.transform.localScale = map_scale;
+
+            // Call the reflection event
+            if (onYReflection != null)
+                onYReflection();
+        }
     }
 }

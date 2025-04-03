@@ -15,7 +15,15 @@ public class CameraInitializerScript : MonoBehaviour
         cameraConfiner = GetComponent<CinemachineConfiner2D>();
 
         // Get camera bounds in scene
-        cameraBounds = GameObject.Find("Camera Bounds").GetComponent<PolygonCollider2D>();
+        try
+        {
+            cameraBounds = GameObject.Find("Camera Bounds").GetComponent<PolygonCollider2D>();
+        }
+        catch
+        {
+            cameraBounds = null;
+            return;
+        }
 
         // Update confiner bounds
         if (cameraConfiner != null && cameraBounds != null)
