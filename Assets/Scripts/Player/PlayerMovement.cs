@@ -60,6 +60,9 @@ public class PlayerMovement : MonoBehaviour
             else
                 numJumps = 0; // Only allow 1 jump if player is already in the air
 
+            // Halt vertical movement to have the same jump height on the 2nd hunt or while falling
+            rb.linearVelocityY = 0;
+
             // Apply jump force as impulse
             rb.AddForceY(jumpStrength, ForceMode2D.Impulse);
         }
