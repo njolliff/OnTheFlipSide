@@ -1,4 +1,3 @@
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -48,9 +47,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Input functions
-    public void OnMove(InputValue playerInput)
+    public void OnMove(InputValue inputValue)
     {
-        movementInput = playerInput.Get<Vector2>();
+        movementInput = inputValue.Get<Vector2>();
     }
 
     public void OnJump()
